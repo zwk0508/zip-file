@@ -3,10 +3,13 @@ package com.zwk.filter;
 import java.io.File;
 import java.io.FilenameFilter;
 
-public class EndsWithFilenameFilter implements FilenameFilter {
+/**
+ * 文件或文件夹名称不能以对应的文件名结尾
+ */
+public class EndsWithFilenameIgnoreFilter implements FilenameFilter {
     private String fileName;
 
-    public EndsWithFilenameFilter(String fileName) {
+    public EndsWithFilenameIgnoreFilter(String fileName) {
         this.fileName = fileName;
     }
 

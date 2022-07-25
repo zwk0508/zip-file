@@ -8,12 +8,29 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 压缩器
+ */
 public class Zipper {
+    /**
+     * 原文件或文件夹地址
+     */
     private String source;
+    /**
+     * 目标文件或文件夹地址
+     */
     private String dest;
+    /**
+     * 忽略的文件或文件夹名称
+     */
     private String[] ignore;
+    /**
+     * 目标文件
+     */
     private File destFile;
-
+    /**
+     * 文件过滤器
+     */
     private FilenameFilter filter;
     private static final int BUFFER_SIZE = 2048;
 
@@ -86,17 +103,24 @@ public class Zipper {
             boolean startsWith = s.startsWith("*");
             boolean endsWith = s.endsWith("*");
             if (startsWith && endsWith) {
-                list.add(new ContainsFilenameFilter(s.substring(1, s.length() - 1)));
+                list.add(new ContainsFilenameIgnoreFilter(s.substring(1, s.length() - 1)));
             } else if (startsWith) {
-                list.add(new EndsWithFilenameFilter(s.substring(1)));
+                list.add(new EndsWithFilenameIgnoreFilter(s.substring(1)));
             } else if (endsWith) {
-                list.add(new StartsWithFilenameFilter(s.substring(0, s.length() - 1)));
+                list.add(new StartsWithFilenameIgnoreFilter(s.substring(0, s.length() - 1)));
             } else {
-                list.add(new EqualsFilenameFilter(s));
+                list.add(new EqualsFilenameIgnoreFilter(s));
             }
         }
     }
 
+    /**
+     * 1、目标文件存在，如果目标文件是文件夹，则压缩文件名称是源文件夹或文件去掉后缀拼接 .zip
+     * 2、目标文件不存在，1、是以 .zip结尾的值创建父级文件夹 2、不是则闯将文件夹，压缩文件名称是源文件夹或文件去掉后缀拼接 .zip
+     *
+     * @param source 原文件
+     * @return 目标文件
+     */
     private File getDestFile(File source) {
         File d = new File(dest);
         if (d.exists()) {
